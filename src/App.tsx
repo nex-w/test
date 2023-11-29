@@ -1,26 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
 
-function App() {
+import { Note } from "./components/Note/types";
+import NoteForm from "./components/Note/NoteForm/NoteForm";
+import NoteList from "./components/Note/NoteList/NoteList";
+
+interface AppProps {
+  initialNotes?: Note[];
+}
+
+const App: React.FC<AppProps> = ({ initialNotes = [] }) => {
+  const [notes, setNotes] = useState<Note[]>(initialNotes);
+
+  useEffect(() => {
+    const savedNotes = localStorage.getItem("notes");
+    if (savedNotes) {
+      const parsedNotes: Note[] = JSON.parse(savedNotes);
+      setNotes(parsedNotes);
+    }
+  }, []);
+
+  const handleNoteSubmit = (note: Note) => {
+    setNotes([...notes, note]);
+    localStorage.setItem("notes", JSON.stringify([...notes, note]));
+  };
+
+  const handleNoteDelete = (timestamp: number) => {
+    const updatedNotes = notes.filter((note) => note.timestamp !== timestamp);
+    setNotes(updatedNotes);
+    localStorage.setItem("notes", JSON.stringify(updatedNotes));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Activity Feed</h1>
+      <NoteForm onSubmit={handleNoteSubmit} />
+      <NoteList notes={notes} onDelete={handleNoteDelete} />
     </div>
   );
-}
+};
 
 export default App;

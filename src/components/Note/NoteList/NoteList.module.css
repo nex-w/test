@@ -1,0 +1,22 @@
+.noteContainer {
+  display: flex;
+  margin-top: 40px;
+  background-color: gainsboro;
+  max-width: 500px;
+  padding: 10px;
+  justify-content: space-between;
+  border-radius: 8px;
+}
+
+.noteContent {
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+  text-align: center;
+}
+.title {
+  font-size: 18px;
+}
+.deleteBtn {
+  margin-left: 15px;
+}
